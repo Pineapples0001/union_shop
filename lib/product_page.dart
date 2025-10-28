@@ -220,27 +220,6 @@ class ProductPage extends StatelessWidget {
                       height: 1.5,
                     ),
                   ),
-
-                  const SizedBox(height: 32),
-
-                  // Placeholder text for students
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey[300]!),
-                    ),
-                    child: const Text(
-                      'Students should add size options, colour options, quantity selector, add to cart button, and buy now button here.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
