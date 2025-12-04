@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/product_page.dart';
 import 'package:union_shop/all_products_page.dart';
 import 'package:union_shop/cart_page.dart';
+import 'package:union_shop/about_page.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -397,6 +398,11 @@ class UnionShopApp extends StatelessWidget {
             builder: (context) => const CartPage(),
             settings: settings,
           );
+        } else if (settings.name == '/about') {
+          return MaterialPageRoute(
+            builder: (context) => const AboutPage(),
+            settings: settings,
+          );
         }
         return null;
       },
@@ -415,6 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentCategoryIndex = 0;
   late List<Product> _categoryProducts;
   Timer? _timer;
+  bool _isMenuOpen = false;
 
   @override
   void initState() {
@@ -463,6 +470,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void navigateToProduct(BuildContext context) {
     Navigator.pushNamed(context, '/product');
+  }
+
+  void toggleMenu() {
+    setState(() {
+      _isMenuOpen = !_isMenuOpen;
+    });
+  }
+
+  Widget _buildMenuItem(String title, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey[300]!),
+          ),
+        ),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
   }
 
   void placeholderCallbackForButtons() {
@@ -678,8 +713,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(
-                                  Icons.menu,
+                                icon: Icon(
+                                  _isMenuOpen ? Icons.close : Icons.menu,
                                   size: 18,
                                   color: Colors.grey,
                                 ),
@@ -688,7 +723,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   minWidth: 32,
                                   minHeight: 32,
                                 ),
-                                onPressed: placeholderCallbackForButtons,
+                                onPressed: toggleMenu,
                               ),
                             ],
                           ),
@@ -699,6 +734,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
+            // Dropdown Menu Overlay
+            if (_isMenuOpen)
+              Container(
+                width: double.infinity,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    _buildMenuItem('Home', () {
+                      toggleMenu();
+                      Navigator.pushNamed(context, '/');
+                    }),
+                    _buildMenuItem('Shop', () {
+                      toggleMenu();
+                      Navigator.pushNamed(context, '/all_products',
+                          arguments: {'searchQuery': ''});
+                    }),
+                    _buildMenuItem('The Print Shack', () {
+                      toggleMenu();
+                      // Placeholder for future Print Shack page
+                    }),
+                    _buildMenuItem('SALE!', () {
+                      toggleMenu();
+                      Navigator.pushNamed(context, '/all_products',
+                          arguments: {'searchQuery': ''});
+                    }),
+                    _buildMenuItem('About', () {
+                      toggleMenu();
+                      Navigator.pushNamed(context, '/about');
+                    }),
+                  ],
+                ),
+              ),
 
             // Hero Section
             SizedBox(

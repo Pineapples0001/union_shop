@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/cart_manager.dart';
+import 'package:union_shop/common_header.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -28,115 +29,7 @@ class _CartPageState extends State<CartPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header
-            Container(
-              height: 100,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  // Top banner
-                  Container(
-                    width: double.infinity,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                    color: const Color(0xFF4d2963),
-                    child: const Text(
-                      'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 13),
-                    ),
-                  ),
-                  // Main header
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              navigateToHome(context);
-                            },
-                            child: Image.network(
-                              'https://www.upsu.net/pageassets/logo/1-LogoCMYKhorizontal.png',
-                              width: 80,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Text(
-                                  'UNION SHOP',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF4d2963),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.search,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(
-                                  minWidth: 32,
-                                  minHeight: 32,
-                                ),
-                                onPressed: placeholderCallbackForButtons,
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.person_outline,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(
-                                  minWidth: 32,
-                                  minHeight: 32,
-                                ),
-                                onPressed: placeholderCallbackForButtons,
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.shopping_bag_outlined,
-                                  size: 18,
-                                  color: Color(0xFF4d2963),
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(
-                                  minWidth: 32,
-                                  minHeight: 32,
-                                ),
-                                onPressed: () {
-                                  // Already on cart page, do nothing
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.menu,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(
-                                  minWidth: 32,
-                                  minHeight: 32,
-                                ),
-                                onPressed: placeholderCallbackForButtons,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const CommonHeader(),
 
             // Cart Content
             Container(
