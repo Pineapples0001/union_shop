@@ -324,7 +324,7 @@ class _CommonHeaderState extends State<CommonHeader> {
                 }),
                 _buildMenuItem('The Print Shack', () {
                   toggleMenu();
-                  // Placeholder for future Print Shack page
+                  context.go('/print-shack');
                 }),
                 _buildMenuItem('SALE!', () {
                   toggleMenu();

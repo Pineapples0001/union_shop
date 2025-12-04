@@ -11,6 +11,7 @@ import 'package:union_shop/category_page.dart';
 import 'package:union_shop/cart_page.dart';
 import 'package:union_shop/about_page.dart';
 import 'package:union_shop/sales_page.dart';
+import 'package:union_shop/print_shack_page.dart';
 
 class AppRouter {
   final AuthService authService;
@@ -105,6 +106,11 @@ class AppRouter {
         path: '/sales',
         name: 'sales',
         builder: (context, state) => const SalesPage(),
+      ),
+      GoRoute(
+        path: '/print-shack',
+        name: 'print-shack',
+        builder: (context, state) => const PrintShackPage(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

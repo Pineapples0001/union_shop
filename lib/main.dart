@@ -947,7 +947,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     _buildMenuItem('The Print Shack', () {
                       toggleMenu();
-                      // Placeholder for future Print Shack page
+                      context.go('/print_shack_page');
                     }),
                     _buildMenuItem('SALE!', () {
                       toggleMenu();
