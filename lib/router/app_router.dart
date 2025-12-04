@@ -21,6 +21,30 @@ class AppRouter {
     refreshListenable: authService,
     debugLogDiagnostics: true,
     initialLocation: '/',
+    redirect: (context, state) {
+      final isInitialized = authService.isInitialized;
+      final isAuthenticated = authService.isAuthenticated;
+      final isGoingToLogin = state.matchedLocation == '/login';
+      final isGoingToSignup = state.matchedLocation == '/signup';
+      final isGoingToAccount = state.matchedLocation == '/account';
+
+      // Don't redirect if still loading
+      if (!isInitialized) {
+        return null;
+      }
+
+      // If going to account but not authenticated, redirect to login
+      if (isGoingToAccount && !isAuthenticated) {
+        return '/login';
+      }
+
+      // If authenticated and going to login/signup, redirect to account
+      if (isAuthenticated && (isGoingToLogin || isGoingToSignup)) {
+        return '/account';
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: '/',
@@ -41,12 +65,6 @@ class AppRouter {
         path: '/account',
         name: 'account',
         builder: (context, state) => AccountDashboard(authService: authService),
-        redirect: (context, state) {
-          if (!authService.isAuthenticated) {
-            return '/login';
-          }
-          return null;
-        },
       ),
       GoRoute(
         path: '/all_products',

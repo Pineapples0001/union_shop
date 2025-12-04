@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:union_shop/product_page.dart';
 import 'package:union_shop/common_footer.dart';
 import 'package:union_shop/services/auth_service.dart';
+import 'package:union_shop/services/order_service.dart';
 import 'package:union_shop/router/app_router.dart';
 
 void main() {
@@ -12,6 +13,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => OrderService()),
       ],
       child: const UnionShopApp(),
     ),
@@ -536,21 +538,32 @@ final List<Product> productDatabase = [
   ),
 ];
 
-class UnionShopApp extends StatelessWidget {
+class UnionShopApp extends StatefulWidget {
   const UnionShopApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    final appRouter = AppRouter(authService);
+  State<UnionShopApp> createState() => _UnionShopAppState();
+}
 
+class _UnionShopAppState extends State<UnionShopApp> {
+  late final AppRouter _appRouter;
+
+  @override
+  void initState() {
+    super.initState();
+    final authService = Provider.of<AuthService>(context, listen: false);
+    _appRouter = AppRouter(authService);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Union Shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
       ),
-      routerConfig: appRouter.router,
+      routerConfig: _appRouter.router,
     );
   }
 }

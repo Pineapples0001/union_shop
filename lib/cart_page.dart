@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:union_shop/cart_manager.dart';
 import 'package:union_shop/common_header.dart';
 import 'package:union_shop/common_footer.dart';
+import 'package:union_shop/services/auth_service.dart';
+import 'package:union_shop/services/order_service.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -12,13 +16,122 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final CartManager _cartManager = CartManager();
+  bool _isPlacingOrder = false;
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
-  void placeholderCallbackForButtons() {
-    // This is the event handler for buttons that don't work yet
+  Future<void> _handlePlaceOrder(BuildContext context) async {
+    final authService = context.read<AuthService>();
+
+    // Check if user is logged in
+    if (!authService.isAuthenticated) {
+      final shouldLogin = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Required'),
+          content: const Text(
+            'You need to be logged in to place an order. Would you like to login now?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4d2963),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Login'),
+            ),
+          ],
+        ),
+      );
+
+      if (shouldLogin == true) {
+        if (!mounted) return;
+        context.go('/login');
+      }
+      return;
+    }
+
+    // Check if cart is empty
+    if (_cartManager.cartItems.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Your cart is empty')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isPlacingOrder = true;
+    });
+
+    try {
+      final orderService = context.read<OrderService>();
+      final order = await orderService.placeOrder(
+        userId: authService.currentUser!.id,
+        cartManager: _cartManager,
+        shippingAddress: authService.currentUser!.address ?? 'Default Address',
+      );
+
+      // Clear the cart after successful order
+      setState(() {
+        _cartManager.clearCart();
+        _isPlacingOrder = false;
+      });
+
+      if (!mounted) return;
+
+      // Show success dialog
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Order Placed Successfully!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Order ID: ${order.id}'),
+              const SizedBox(height: 8),
+              Text('Total: £${order.totalAmount.toStringAsFixed(2)}'),
+              const SizedBox(height: 8),
+              const Text('You can track your order in your account dashboard.'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Continue Shopping'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.go('/account');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4d2963),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('View Orders'),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isPlacingOrder = false;
+      });
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to place order: $e')),
+      );
+    }
   }
 
   @override
@@ -298,7 +411,9 @@ class _CartPageState extends State<CartPage> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: _isPlacingOrder
+                                      ? null
+                                      : () => _handlePlaceOrder(context),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF4d2963),
                                     foregroundColor: Colors.white,
@@ -308,14 +423,23 @@ class _CartPageState extends State<CartPage> {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 16),
                                   ),
-                                  child: const Text(
-                                    'Order',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 1,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  child: _isPlacingOrder
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text(
+                                          'Order',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            letterSpacing: 1,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 12),

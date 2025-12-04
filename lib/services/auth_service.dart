@@ -1,13 +1,78 @@
 import 'package:flutter/foundation.dart';
 import 'package:union_shop/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class AuthService extends ChangeNotifier {
   UserModel? _currentUser;
   bool _isLoading = false;
+  bool _isInitialized = false;
 
   UserModel? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _currentUser != null;
+  bool get isInitialized => _isInitialized;
+
+  AuthService() {
+    _loadUserFromStorage();
+  }
+
+  Future<void> _loadUserFromStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userJson = prefs.getString('current_user');
+      if (kDebugMode) {
+        print('🔍 Loading user from storage...');
+        print('📦 Found stored user: ${userJson != null}');
+      }
+      if (userJson != null) {
+        _currentUser = UserModel.fromJson(json.decode(userJson));
+        if (kDebugMode) {
+          print('✅ User loaded: ${_currentUser!.email}');
+        }
+        notifyListeners();
+      } else {
+        if (kDebugMode) {
+          print('❌ No user in storage');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Error loading user from storage: $e');
+      }
+    } finally {
+      _isInitialized = true;
+      if (kDebugMode) {
+        print('✅ Auth service initialized. Authenticated: $isAuthenticated');
+      }
+      notifyListeners();
+    }
+  }
+
+  Future<void> _saveUserToStorage(UserModel user) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('current_user', json.encode(user.toJson()));
+      if (kDebugMode) {
+        print('💾 User saved to storage: ${user.email}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Error saving user to storage: $e');
+      }
+    }
+  }
+
+  Future<void> _clearUserFromStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('current_user');
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error clearing user from storage: $e');
+      }
+    }
+  }
 
   // Simulate email/password login
   Future<bool> loginWithEmail(String email, String password) async {
@@ -26,6 +91,7 @@ class AuthService extends ChangeNotifier {
         createdAt: DateTime.now(),
         authProvider: 'email',
       );
+      await _saveUserToStorage(_currentUser!);
       _isLoading = false;
       notifyListeners();
       return true;
@@ -53,6 +119,7 @@ class AuthService extends ChangeNotifier {
       authProvider: 'email',
     );
 
+    await _saveUserToStorage(_currentUser!);
     _isLoading = false;
     notifyListeners();
     return true;
@@ -76,6 +143,7 @@ class AuthService extends ChangeNotifier {
       authProvider: 'google',
     );
 
+    await _saveUserToStorage(_currentUser!);
     _isLoading = false;
     notifyListeners();
     return true;
@@ -99,6 +167,7 @@ class AuthService extends ChangeNotifier {
       authProvider: 'facebook',
     );
 
+    await _saveUserToStorage(_currentUser!);
     _isLoading = false;
     notifyListeners();
     return true;
@@ -143,6 +212,7 @@ class AuthService extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 300));
 
     _currentUser = null;
+    await _clearUserFromStorage();
 
     _isLoading = false;
     notifyListeners();

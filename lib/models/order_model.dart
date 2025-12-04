@@ -56,6 +56,7 @@ class OrderModel {
 class OrderItem {
   final String productId;
   final String productName;
+  final String size;
   final int quantity;
   final double price;
   final String imageUrl;
@@ -63,6 +64,7 @@ class OrderItem {
   OrderItem({
     required this.productId,
     required this.productName,
+    required this.size,
     required this.quantity,
     required this.price,
     required this.imageUrl,
@@ -72,6 +74,7 @@ class OrderItem {
     return {
       'productId': productId,
       'productName': productName,
+      'size': size,
       'quantity': quantity,
       'price': price,
       'imageUrl': imageUrl,
@@ -82,6 +85,7 @@ class OrderItem {
     return OrderItem(
       productId: json['productId'],
       productName: json['productName'],
+      size: json['size'],
       quantity: json['quantity'],
       price: json['price'],
       imageUrl: json['imageUrl'],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:union_shop/services/auth_service.dart';
+import 'package:union_shop/services/order_service.dart';
 import 'package:union_shop/models/user_model.dart';
 import 'package:union_shop/models/order_model.dart';
 import 'package:union_shop/common_header.dart';
@@ -18,11 +20,15 @@ class AccountDashboard extends StatefulWidget {
 class _AccountDashboardState extends State<AccountDashboard> {
   int _selectedTab = 0;
 
-  // User's actual orders - empty until they make purchases
-  final List<OrderModel> _orders = [];
-
   @override
   Widget build(BuildContext context) {
+    // Wait for auth service to initialize
+    if (!widget.authService.isInitialized) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final user = widget.authService.currentUser;
 
     if (user == null) {
@@ -276,7 +282,7 @@ class _AccountDashboardState extends State<AccountDashboard> {
       case 0:
         return _buildDashboard(user);
       case 1:
-        return _buildOrders();
+        return _buildOrders(user);
       case 2:
         return _buildProfileSettings(user);
       case 3:
@@ -311,19 +317,21 @@ class _AccountDashboardState extends State<AccountDashboard> {
             _buildDashboardCard(
               icon: Icons.shopping_bag_outlined,
               title: 'Total Orders',
-              value: '${_orders.length}',
+              value: '${context.watch<OrderService>().getTotalOrders(user.id)}',
               color: Colors.blue,
             ),
             _buildDashboardCard(
               icon: Icons.local_shipping_outlined,
               title: 'Shipped',
-              value: '${_orders.where((o) => o.status == 'shipped').length}',
+              value:
+                  '${context.watch<OrderService>().getShippedOrders(user.id)}',
               color: Colors.orange,
             ),
             _buildDashboardCard(
               icon: Icons.check_circle_outline,
               title: 'Delivered',
-              value: '${_orders.where((o) => o.status == 'delivered').length}',
+              value:
+                  '${context.watch<OrderService>().getDeliveredOrders(user.id)}',
               color: Colors.green,
             ),
           ],
@@ -337,7 +345,7 @@ class _AccountDashboardState extends State<AccountDashboard> {
           ),
         ),
         const SizedBox(height: 16),
-        if (_orders.isEmpty)
+        if (context.watch<OrderService>().getUserOrders(user.id).isEmpty)
           Container(
             padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
@@ -373,7 +381,11 @@ class _AccountDashboardState extends State<AccountDashboard> {
             ),
           )
         else
-          ..._orders.take(3).map((order) => _buildOrderCard(order)).toList(),
+          ...context
+              .watch<OrderService>()
+              .getRecentOrders(user.id, limit: 3)
+              .map((order) => _buildOrderCard(order))
+              .toList(),
       ],
     );
   }
@@ -417,7 +429,7 @@ class _AccountDashboardState extends State<AccountDashboard> {
     );
   }
 
-  Widget _buildOrders() {
+  Widget _buildOrders(UserModel user) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -429,7 +441,7 @@ class _AccountDashboardState extends State<AccountDashboard> {
           ),
         ),
         const SizedBox(height: 24),
-        if (_orders.isEmpty)
+        if (context.watch<OrderService>().getUserOrders(user.id).isEmpty)
           Center(
             child: Container(
               padding: const EdgeInsets.all(60),
@@ -493,7 +505,11 @@ class _AccountDashboardState extends State<AccountDashboard> {
             ),
           )
         else
-          ..._orders.map((order) => _buildOrderCard(order)).toList(),
+          ...context
+              .watch<OrderService>()
+              .getUserOrders(user.id)
+              .map((order) => _buildOrderCard(order))
+              .toList(),
       ],
     );
   }
@@ -589,7 +605,7 @@ class _AccountDashboardState extends State<AccountDashboard> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Qty: ${order.items.first.quantity}',
+                      'Size: ${order.items.first.size} | Qty: ${order.items.first.quantity}',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[600],

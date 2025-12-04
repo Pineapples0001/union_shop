@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:union_shop/services/auth_service.dart';
 
 class CommonHeader extends StatefulWidget {
   const CommonHeader({super.key});
@@ -204,19 +206,31 @@ class _CommonHeaderState extends State<CommonHeader> {
                         showSearchDialog(context);
                       },
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.person_outline,
-                        size: 18,
-                        color: Colors.grey,
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
-                      onPressed: () {
-                        context.go('/login');
+                    Consumer<AuthService>(
+                      builder: (context, authService, _) {
+                        return IconButton(
+                          icon: Icon(
+                            authService.isAuthenticated
+                                ? Icons.person
+                                : Icons.person_outline,
+                            size: 18,
+                            color: authService.isAuthenticated
+                                ? const Color(0xFF4d2963)
+                                : Colors.grey,
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          constraints: const BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
+                          ),
+                          onPressed: () {
+                            if (authService.isAuthenticated) {
+                              context.go('/account');
+                            } else {
+                              context.go('/login');
+                            }
+                          },
+                        );
                       },
                     ),
                     IconButton(
