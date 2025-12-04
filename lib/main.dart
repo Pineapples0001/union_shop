@@ -8,6 +8,8 @@ import 'package:union_shop/sales_page.dart';
 import 'package:union_shop/login_page.dart';
 import 'package:union_shop/signup_page.dart';
 import 'package:union_shop/common_footer.dart';
+import 'package:union_shop/collections_page.dart';
+import 'package:union_shop/category_page.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -554,7 +556,13 @@ class UnionShopApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => AllProductsPage(
               searchQuery: args?['searchQuery'] ?? '',
+              initialCategory: args?['category'],
             ),
+            settings: settings,
+          );
+        } else if (settings.name == '/collections') {
+          return MaterialPageRoute(
+            builder: (context) => const CollectionsPage(),
             settings: settings,
           );
         } else if (settings.name == '/cart') {
@@ -580,6 +588,12 @@ class UnionShopApp extends StatelessWidget {
         } else if (settings.name == '/signup') {
           return MaterialPageRoute(
             builder: (context) => const SignupPage(),
+            settings: settings,
+          );
+        } else if (settings.name?.startsWith('/category/') == true) {
+          final categoryName = settings.name!.substring('/category/'.length);
+          return MaterialPageRoute(
+            builder: (context) => CategoryPage(categoryName: categoryName),
             settings: settings,
           );
         }
@@ -931,6 +945,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       toggleMenu();
                       Navigator.pushNamed(context, '/all_products',
                           arguments: {'searchQuery': ''});
+                    }),
+                    _buildMenuItem('Collections', () {
+                      toggleMenu();
+                      Navigator.pushNamed(context, '/collections');
                     }),
                     _buildMenuItem('The Print Shack', () {
                       toggleMenu();

@@ -6,8 +6,9 @@ import 'package:union_shop/common_footer.dart';
 
 class AllProductsPage extends StatefulWidget {
   final String? searchQuery;
+  final String? initialCategory;
 
-  const AllProductsPage({super.key, this.searchQuery});
+  const AllProductsPage({super.key, this.searchQuery, this.initialCategory});
 
   @override
   State<AllProductsPage> createState() => _AllProductsPageState();
@@ -27,6 +28,9 @@ class _AllProductsPageState extends State<AllProductsPage> {
     super.initState();
     if (widget.searchQuery != null) {
       searchQuery = widget.searchQuery!;
+    }
+    if (widget.initialCategory != null) {
+      selectedCategory = widget.initialCategory!;
     }
   }
 
