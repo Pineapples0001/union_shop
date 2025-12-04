@@ -274,6 +274,10 @@ class _CommonHeaderState extends State<CommonHeader> {
                   Navigator.pushNamed(context, '/all_products',
                       arguments: {'searchQuery': ''});
                 }),
+                _buildMenuItem('Collections', () {
+                  toggleMenu();
+                  Navigator.pushNamed(context, '/collections');
+                }),
                 _buildMenuItem('The Print Shack', () {
                   toggleMenu();
                   // Placeholder for future Print Shack page
