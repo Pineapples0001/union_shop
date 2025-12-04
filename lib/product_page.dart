@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:union_shop/main.dart';
 import 'package:union_shop/cart_manager.dart';
 import 'package:union_shop/common_header.dart';
+import 'package:union_shop/common_footer.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -261,19 +262,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
 
             // Footer
-            Container(
-              width: double.infinity,
-              color: Colors.grey[50],
-              padding: const EdgeInsets.all(24),
-              child: const Text(
-                'Placeholder Footer',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            const CommonFooter(),
           ],
         ),
       ),

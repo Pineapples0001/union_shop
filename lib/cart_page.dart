@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/cart_manager.dart';
 import 'package:union_shop/common_header.dart';
+import 'package:union_shop/common_footer.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -338,6 +339,9 @@ class _CartPageState extends State<CartPage> {
                 ],
               ),
             ),
+
+            // Footer
+            const CommonFooter(),
           ],
         ),
       ),

@@ -220,7 +220,9 @@ class _CommonHeaderState extends State<CommonHeader> {
                         minWidth: 32,
                         minHeight: 32,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
                     ),
                     IconButton(
                       icon: const Icon(
