@@ -4,6 +4,7 @@ import 'package:union_shop/product_page.dart';
 import 'package:union_shop/all_products_page.dart';
 import 'package:union_shop/cart_page.dart';
 import 'package:union_shop/about_page.dart';
+import 'package:union_shop/sales_page.dart';
 
 void main() {
   runApp(const UnionShopApp());
@@ -401,6 +402,11 @@ class UnionShopApp extends StatelessWidget {
         } else if (settings.name == '/about') {
           return MaterialPageRoute(
             builder: (context) => const AboutPage(),
+            settings: settings,
+          );
+        } else if (settings.name == '/sales') {
+          return MaterialPageRoute(
+            builder: (context) => const SalesPage(),
             settings: settings,
           );
         }

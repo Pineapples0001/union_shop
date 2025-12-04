@@ -278,8 +278,7 @@ class _CommonHeaderState extends State<CommonHeader> {
                 }),
                 _buildMenuItem('SALE!', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/all_products',
-                      arguments: {'searchQuery': ''});
+                  Navigator.pushNamed(context, '/sales');
                 }),
                 _buildMenuItem('About', () {
                   toggleMenu();
