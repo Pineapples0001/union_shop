@@ -1,408 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:union_shop/main.dart';
 import 'package:union_shop/product_page.dart';
-import 'package:union_shop/all_products_page.dart';
 
-void main() {
-  runApp(const UnionShopApp());
-}
-
-// Product Model Class
-class Product {
-  final String serial;
-  final String name;
-  final String category;
-  final String description;
-  final double price;
-  final bool isSale;
-  final double? salePrice;
-  final String imageUrl;
-  final bool isVisible;
-
-  const Product({
-    required this.serial,
-    required this.name,
-    required this.category,
-    required this.description,
-    required this.price,
-    required this.isSale,
-    this.salePrice,
-    required this.imageUrl,
-    this.isVisible = true,
-  });
-}
-
-// Sample Product Database
-final List<Product> productDatabase = [
-  Product(
-    serial: 'PROD001',
-    name: 'Portsmouth City Magnet',
-    category: 'Souvenirs',
-    description:
-        'A beautiful commemorative magnet featuring Portsmouth City landmarks. Perfect souvenir for students and visitors.',
-    price: 15.00,
-    isSale: true,
-    salePrice: 12.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD002',
-    name: 'Classic Hoodie',
-    category: 'Clothing',
-    description:
-        'Comfortable and stylish university branded hoodie. Made from high-quality cotton blend material.',
-    price: 25.00,
-    isSale: true,
-    salePrice: 18.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PurpleHoodieFinal.jpg?v=1742201957',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD003',
-    name: 'Campus Cups',
-    category: 'Accessories',
-    description:
-        'Plastic cups with university logo. Dishwasher safe and perfect for your morning coffee or tea.',
-    price: 10.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/products/IMG_0667_1024x1024@2x.jpg?v=1557218882',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD004',
-    name: 'Student Notebook Set',
-    category: 'Stationery',
-    description:
-        'Set of 3 ruled notebooks ideal for lectures and study sessions. Includes perforated pages for easy removal.',
-    price: 8.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/products/IMG_3406_1024x1024@2x.jpg?v=1581000944',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD005',
-    name: 'University Bag',
-    category: 'Accessories',
-    description:
-        'Durable backpack with laptop compartment. Features the university logo and water-resistant material.',
-    price: 45.00,
-    isSale: true,
-    salePrice: 36.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/products/cottonshopper_1024x1024@2x.jpg?v=1657540427',
-    isVisible: true,
-  ),
-  // Clothing - 5 items
-  Product(
-    serial: 'PROD006',
-    name: 'University T-Shirt',
-    category: 'Clothing',
-    description:
-        'Classic cotton t-shirt with university logo. Available in multiple colors and comfortable for everyday wear.',
-    price: 18.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD007',
-    name: 'University Sweatshirt',
-    category: 'Clothing',
-    description:
-        'Warm fleece-lined sweatshirt perfect for cold campus days. Features embroidered university crest.',
-    price: 32.00,
-    isSale: true,
-    salePrice: 25.60,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD008',
-    name: 'University Track Pants',
-    category: 'Clothing',
-    description:
-        'Comfortable athletic track pants with university branding. Perfect for sports or casual wear.',
-    price: 28.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD009',
-    name: 'University Baseball Cap',
-    category: 'Clothing',
-    description:
-        'Adjustable baseball cap with embroidered university logo. One size fits all.',
-    price: 15.00,
-    isSale: true,
-    salePrice: 12.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD010',
-    name: 'University Scarf',
-    category: 'Clothing',
-    description:
-        'Warm knitted scarf in university colors. Perfect for showing your school spirit in winter.',
-    price: 20.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  // Accessories - 5 items
-  Product(
-    serial: 'PROD011',
-    name: 'University Water Bottle',
-    category: 'Accessories',
-    description:
-        'Reusable stainless steel water bottle with university logo. Keeps drinks cold for 24 hours.',
-    price: 22.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD012',
-    name: 'University Tote Bag',
-    category: 'Accessories',
-    description:
-        'Eco-friendly canvas tote bag with university branding. Perfect for carrying books and supplies.',
-    price: 12.00,
-    isSale: true,
-    salePrice: 9.60,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD013',
-    name: 'University Keychain',
-    category: 'Accessories',
-    description:
-        'Metal keychain featuring university crest. Durable and perfect for keeping your keys organized.',
-    price: 6.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD014',
-    name: 'University Lanyard',
-    category: 'Accessories',
-    description:
-        'Durable lanyard with university colors and logo. Includes detachable buckle for ID cards.',
-    price: 5.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD015',
-    name: 'University Pin Badge Set',
-    category: 'Accessories',
-    description:
-        'Set of 3 enamel pin badges with various university designs. Great for personalizing bags and jackets.',
-    price: 8.00,
-    isSale: true,
-    salePrice: 6.40,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  // Souvenirs - 5 items
-  Product(
-    serial: 'PROD016',
-    name: 'University Postcard Set',
-    category: 'Souvenirs',
-    description:
-        'Beautiful set of 10 postcards featuring campus landmarks and university history.',
-    price: 7.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD017',
-    name: 'University Snow Globe',
-    category: 'Souvenirs',
-    description:
-        'Decorative snow globe featuring miniature campus buildings. Perfect desk decoration and keepsake.',
-    price: 18.00,
-    isSale: true,
-    salePrice: 14.40,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD018',
-    name: 'University Pennant Flag',
-    category: 'Souvenirs',
-    description:
-        'Traditional felt pennant flag with university name and colors. Great for dorm room decoration.',
-    price: 14.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD019',
-    name: 'University Coaster Set',
-    category: 'Souvenirs',
-    description:
-        'Set of 4 cork-backed coasters with university logo. Protects surfaces while showing school pride.',
-    price: 10.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD020',
-    name: 'University Commemorative Plate',
-    category: 'Souvenirs',
-    description:
-        'Decorative ceramic plate featuring campus artwork. Perfect collectible for alumni and visitors.',
-    price: 25.00,
-    isSale: true,
-    salePrice: 20.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  // Stationery - 5 items
-  Product(
-    serial: 'PROD021',
-    name: 'University Pen Set',
-    category: 'Stationery',
-    description:
-        'Set of 5 ballpoint pens with university logo. Smooth writing and perfect for note-taking.',
-    price: 6.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD022',
-    name: 'University Sticky Notes',
-    category: 'Stationery',
-    description:
-        'Pack of sticky notes in university colors. Multiple sizes included for all your organizational needs.',
-    price: 5.00,
-    isSale: true,
-    salePrice: 4.00,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD023',
-    name: 'University Planner',
-    category: 'Stationery',
-    description:
-        'Academic year planner with university branding. Includes monthly and weekly views with space for notes.',
-    price: 15.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD024',
-    name: 'University Pencil Case',
-    category: 'Stationery',
-    description:
-        'Durable zippered pencil case with university logo. Multiple compartments for organizing supplies.',
-    price: 9.00,
-    isSale: false,
-    salePrice: null,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-  Product(
-    serial: 'PROD025',
-    name: 'University Highlighter Set',
-    category: 'Stationery',
-    description:
-        'Set of 6 vibrant highlighters in university colors. Perfect for studying and color-coding notes.',
-    price: 7.00,
-    isSale: true,
-    salePrice: 5.60,
-    imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-    isVisible: true,
-  ),
-];
-
-class UnionShopApp extends StatelessWidget {
-  const UnionShopApp({super.key});
+class AllProductsPage extends StatefulWidget {
+  const AllProductsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Union Shop',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
-      ),
-      home: const HomeScreen(),
-      // By default, the app starts at the '/' route, which is the HomeScreen
-      initialRoute: '/',
-      routes: {
-        '/all_products': (context) => const AllProductsPage(),
-      },
-    );
-  }
+  State<AllProductsPage> createState() => _AllProductsPageState();
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class _AllProductsPageState extends State<AllProductsPage> {
+  String selectedCategory = 'All';
+  String selectedSort = 'Name (A-Z)';
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
-
-  void navigateToProduct(BuildContext context) {
-    Navigator.pushNamed(context, '/product');
   }
 
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
   }
 
+  List<Product> getFilteredAndSortedProducts() {
+    // Get all visible products
+    List<Product> products = productDatabase.where((p) => p.isVisible).toList();
+
+    // Filter by category
+    if (selectedCategory != 'All') {
+      products = products.where((p) => p.category == selectedCategory).toList();
+    }
+
+    // Sort products
+    switch (selectedSort) {
+      case 'Name (A-Z)':
+        products.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 'Name (Z-A)':
+        products.sort((a, b) => b.name.compareTo(a.name));
+        break;
+      case 'Price (Low to High)':
+        products.sort((a, b) {
+          final priceA =
+              a.isSale && a.salePrice != null ? a.salePrice! : a.price;
+          final priceB =
+              b.isSale && b.salePrice != null ? b.salePrice! : b.price;
+          return priceA.compareTo(priceB);
+        });
+        break;
+      case 'Price (High to Low)':
+        products.sort((a, b) {
+          final priceA =
+              a.isSale && a.salePrice != null ? a.salePrice! : a.price;
+          final priceB =
+              b.isSale && b.salePrice != null ? b.salePrice! : b.price;
+          return priceB.compareTo(priceA);
+        });
+        break;
+      case 'On Sale':
+        products = products.where((p) => p.isSale).toList();
+        break;
+    }
+
+    return products;
+  }
+
+  List<String> getCategories() {
+    final categories = productDatabase
+        .where((p) => p.isVisible)
+        .map((p) => p.category)
+        .toSet()
+        .toList();
+    categories.sort();
+    return ['All', ...categories];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final filteredProducts = getFilteredAndSortedProducts();
+
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -520,112 +197,134 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // Hero Section
-            SizedBox(
-              height: 400,
-              width: double.infinity,
-              child: Stack(
+            // Page Title and Filters
+            Container(
+              color: Colors.grey[100],
+              padding: const EdgeInsets.all(40),
+              child: Column(
                 children: [
-                  // Background image
-                  Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
-                        ),
-                      ),
+                  const Text(
+                    'ALL PRODUCTS',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 1,
                     ),
                   ),
-                  // Content overlay
-                  Positioned(
-                    left: 24,
-                    right: 24,
-                    top: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Placeholder Hero Title',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.2,
-                          ),
+                  const SizedBox(height: 32),
+
+                  // Filter and Sort Dropdowns
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      // Category Filter
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "This is placeholder text for the hero section.",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            height: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/all_products');
+                        child: DropdownButton<String>(
+                          value: selectedCategory,
+                          underline: const SizedBox(),
+                          items: getCategories().map((category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Text(
+                                'Category: $category',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategory = value!;
+                            });
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4d2963),
-                            foregroundColor: Colors.white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
-                          child: const Text(
-                            'BROWSE PRODUCTS',
-                            style: TextStyle(fontSize: 14, letterSpacing: 1),
-                          ),
                         ),
-                      ],
+                      ),
+
+                      // Sort Dropdown
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: DropdownButton<String>(
+                          value: selectedSort,
+                          underline: const SizedBox(),
+                          items: [
+                            'Name (A-Z)',
+                            'Name (Z-A)',
+                            'Price (Low to High)',
+                            'Price (High to Low)',
+                            'On Sale',
+                          ].map((sortOption) {
+                            return DropdownMenuItem(
+                              value: sortOption,
+                              child: Text(
+                                'Sort: $sortOption',
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedSort = value!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Results count
+                  Text(
+                    'Showing ${filteredProducts.length} product${filteredProducts.length != 1 ? 's' : ''}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Products Section
+            // Products Grid
             Container(
-              color: Colors.white,
+              color: Colors.grey[100],
               child: Padding(
-                padding: const EdgeInsets.all(40.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'PRODUCTS SECTION',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        letterSpacing: 1,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                child: filteredProducts.isEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.all(40),
+                        child: Text(
+                          'No products found with the selected filters.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )
+                    : GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount:
+                            MediaQuery.of(context).size.width > 600 ? 3 : 1,
+                        crossAxisSpacing: 24,
+                        mainAxisSpacing: 48,
+                        childAspectRatio: 0.7,
+                        children: filteredProducts
+                            .map((product) => _ProductCard(product: product))
+                            .toList(),
                       ),
-                    ),
-                    const SizedBox(height: 48),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 600 ? 2 : 1,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: 48,
-                      children: productDatabase
-                          .where((product) => product.isVisible)
-                          .take(4)
-                          .map((product) => ProductCard(product: product))
-                          .toList(),
-                    ),
-                  ],
-                ),
               ),
             ),
 
@@ -899,11 +598,10 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class ProductCard extends StatelessWidget {
+class _ProductCard extends StatelessWidget {
   final Product product;
 
-  const ProductCard({
-    super.key,
+  const _ProductCard({
     required this.product,
   });
 
