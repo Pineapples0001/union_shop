@@ -136,8 +136,8 @@ class _AllProductsPageState extends State<AllProductsPage> {
   }
 
   List<Product> getFilteredAndSortedProducts() {
-    // Get all visible products
-    List<Product> products = productDatabase.where((p) => p.isVisible).toList();
+    // Get all products
+    List<Product> products = productDatabase.toList();
 
     // Filter by search query
     if (searchQuery.isNotEmpty) {
@@ -189,11 +189,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
   }
 
   List<String> getCategories() {
-    final categories = productDatabase
-        .where((p) => p.isVisible)
-        .map((p) => p.category)
-        .toSet()
-        .toList();
+    final categories = productDatabase.map((p) => p.category).toSet().toList();
     categories.sort();
     return ['All', ...categories];
   }

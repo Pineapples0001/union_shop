@@ -369,6 +369,166 @@ final List<Product> productDatabase = [
         'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
     isVisible: true,
   ),
+  // Graduation - 3 items (hidden from homepage)
+  Product(
+    serial: 'PROD026',
+    name: 'Graduation Teddy Bear',
+    category: 'Graduation',
+    description:
+        'Adorable graduation bear wearing cap and gown. Perfect gift for celebrating academic achievement.',
+    price: 24.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD027',
+    name: 'Graduation Photo Frame',
+    category: 'Graduation',
+    description:
+        'Elegant photo frame with graduation motif. Holds 5x7 photo and features university crest.',
+    price: 18.00,
+    isSale: true,
+    salePrice: 14.40,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD028',
+    name: 'Graduation Keepsake Box',
+    category: 'Graduation',
+    description:
+        'Wooden keepsake box with engraved university logo. Perfect for storing graduation memories and mementos.',
+    price: 32.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  // Essentials - 3 items (hidden from homepage)
+  Product(
+    serial: 'PROD029',
+    name: 'Student Essentials Bundle',
+    category: 'Essentials',
+    description:
+        'Complete starter pack including notebook, pens, highlighters, and sticky notes. Everything you need for classes.',
+    price: 28.00,
+    isSale: true,
+    salePrice: 22.40,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD030',
+    name: 'Laundry Essentials Kit',
+    category: 'Essentials',
+    description:
+        'Student laundry kit with detergent pods, mesh bag, and stain remover. Essential for dorm living.',
+    price: 22.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD031',
+    name: 'Study Essentials Pack',
+    category: 'Essentials',
+    description:
+        'Includes desk lamp, calculator, USB drive, and notebook. Everything for productive study sessions.',
+    price: 45.00,
+    isSale: true,
+    salePrice: 36.00,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  // Pride Collection - 3 items (hidden from homepage)
+  Product(
+    serial: 'PROD032',
+    name: 'Pride Rainbow Lanyard',
+    category: 'Pride Collection',
+    description:
+        'Vibrant rainbow lanyard with university logo. Show your pride and support for LGBTQ+ community.',
+    price: 8.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD033',
+    name: 'Pride Pin Badge Collection',
+    category: 'Pride Collection',
+    description:
+        'Set of 5 pride-themed enamel pins featuring various pride flags. Celebrate diversity and inclusion.',
+    price: 12.00,
+    isSale: true,
+    salePrice: 9.60,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD034',
+    name: 'Pride Tote Bag',
+    category: 'Pride Collection',
+    description:
+        'Canvas tote bag with rainbow university logo design. Eco-friendly and perfect for showing your support.',
+    price: 15.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  // Summer Collection - 3 items (hidden from homepage)
+  Product(
+    serial: 'PROD035',
+    name: 'Summer Beach Towel',
+    category: 'Summer Collection',
+    description:
+        'Large beach towel with university logo and summer design. Quick-dry microfiber material, perfect for beach days.',
+    price: 28.00,
+    isSale: true,
+    salePrice: 22.40,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD036',
+    name: 'Summer Sunglasses',
+    category: 'Summer Collection',
+    description:
+        'UV protection sunglasses with university branding. Stylish and protective for sunny campus days.',
+    price: 18.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+  Product(
+    serial: 'PROD037',
+    name: 'Summer Flip Flops',
+    category: 'Summer Collection',
+    description:
+        'Comfortable flip flops in university colors with logo. Perfect for dorm showers or casual summer wear.',
+    price: 14.00,
+    isSale: true,
+    salePrice: 11.20,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
 ];
 
 class UnionShopApp extends StatelessWidget {
