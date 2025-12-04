@@ -24,7 +24,7 @@ class SalesPage extends StatelessWidget {
             // Sale Banner
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF4d2963), Color(0xFF6d3983)],
@@ -37,25 +37,25 @@ class SalesPage extends StatelessWidget {
                   const Text(
                     'SALE!',
                     style: TextStyle(
-                      fontSize: 48,
+                      fontSize: 36,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 2,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   Text(
                     'Amazing deals on selected items',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       color: Colors.white.withOpacity(0.9),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
                     '${saleProducts.length} items on sale',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: Colors.white.withOpacity(0.8),
                     ),
                   ),
@@ -63,55 +63,66 @@ class SalesPage extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 150),
+
             // Products Grid
-            Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: saleProducts.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.local_offer_outlined,
-                              size: 80,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'No sale items available at the moment',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey[600],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final isMobile = constraints.maxWidth < 600;
+                return Container(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 4 : 20,
+                    vertical: isMobile ? 8 : 20,
+                  ),
+                  child: saleProducts.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.local_offer_outlined,
+                                size: 80,
+                                color: Colors.grey[400],
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 20),
+                              Text(
+                                'No sale items available at the moment',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : Builder(
+                          builder: (context) {
+                            final isWideScreen = constraints.maxWidth > 800;
+                            final isMobile = constraints.maxWidth < 600;
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: isWideScreen ? 3 : 1,
+                                childAspectRatio: isWideScreen
+                                    ? 0.75
+                                    : (isMobile ? 0.75 : 1.2),
+                                crossAxisSpacing: isMobile ? 8 : 12,
+                                mainAxisSpacing: isMobile ? 8 : 12,
+                              ),
+                              itemCount: saleProducts.length,
+                              itemBuilder: (context, index) {
+                                final product = saleProducts[index];
+                                return _SaleProductCard(product: product);
+                              },
+                            );
+                          },
                         ),
-                      )
-                    : LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isWideScreen = constraints.maxWidth > 800;
-                          return GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: isWideScreen ? 3 : 1,
-                              childAspectRatio: isWideScreen ? 0.75 : 1.2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
-                            itemCount: saleProducts.length,
-                            itemBuilder: (context, index) {
-                              final product = saleProducts[index];
-                              return _SaleProductCard(product: product);
-                            },
-                          );
-                        },
-                      ),
-              ),
+                );
+              },
             ),
 
             // Footer
@@ -446,63 +457,61 @@ class _SaleProductCard extends StatelessWidget {
               ],
             ),
             // Product Details
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.category,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                        letterSpacing: 1,
-                      ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.category,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      letterSpacing: 1,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                          '£${product.salePrice?.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                          ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        '£${product.salePrice?.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '£${product.price.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Save £${(product.price - (product.salePrice ?? product.price)).toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF4d2963),
-                        fontWeight: FontWeight.w500,
                       ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '£${product.price.toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Save £${(product.price - (product.salePrice ?? product.price)).toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF4d2963),
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
