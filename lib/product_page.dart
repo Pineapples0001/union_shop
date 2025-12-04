@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/main.dart';
 import 'package:union_shop/cart_manager.dart';
-import 'package:union_shop/all_products_page.dart';
 
 class ProductPage extends StatefulWidget {
   final Product product;
@@ -66,12 +65,10 @@ class _ProductPageState extends State<ProductPage> {
                   onSubmitted: (value) {
                     if (value.isNotEmpty) {
                       Navigator.of(context).pop();
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AllProductsPage(searchQuery: value),
-                        ),
+                        '/all_products',
+                        arguments: {'searchQuery': value},
                       );
                     }
                   },
@@ -94,13 +91,10 @@ class _ProductPageState extends State<ProductPage> {
                       onPressed: () {
                         if (searchController.text.isNotEmpty) {
                           Navigator.of(context).pop();
-                          Navigator.push(
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => AllProductsPage(
-                                searchQuery: searchController.text,
-                              ),
-                            ),
+                            '/all_products',
+                            arguments: {'searchQuery': searchController.text},
                           );
                         }
                       },

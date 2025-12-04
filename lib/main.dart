@@ -377,12 +377,28 @@ class UnionShopApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
       ),
-      home: const HomeScreen(),
-      // By default, the app starts at the '/' route, which is the HomeScreen
       initialRoute: '/',
-      routes: {
-        '/all_products': (context) => const AllProductsPage(),
-        '/cart': (context) => const CartPage(),
+      onGenerateRoute: (settings) {
+        if (settings.name == '/') {
+          return MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+            settings: settings,
+          );
+        } else if (settings.name == '/all_products') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          return MaterialPageRoute(
+            builder: (context) => AllProductsPage(
+              searchQuery: args?['searchQuery'] ?? '',
+            ),
+            settings: settings,
+          );
+        } else if (settings.name == '/cart') {
+          return MaterialPageRoute(
+            builder: (context) => const CartPage(),
+            settings: settings,
+          );
+        }
+        return null;
       },
     );
   }
@@ -498,12 +514,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   onSubmitted: (value) {
                     if (value.isNotEmpty) {
                       Navigator.of(context).pop();
-                      Navigator.push(
+                      Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AllProductsPage(searchQuery: value),
-                        ),
+                        '/all_products',
+                        arguments: {'searchQuery': value},
                       );
                     }
                   },
@@ -526,13 +540,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         if (searchController.text.isNotEmpty) {
                           Navigator.of(context).pop();
-                          Navigator.push(
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => AllProductsPage(
-                                searchQuery: searchController.text,
-                              ),
-                            ),
+                            '/all_products',
+                            arguments: {'searchQuery': searchController.text},
                           );
                         }
                       },
