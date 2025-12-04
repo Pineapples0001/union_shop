@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:union_shop/common_header.dart';
 import 'package:union_shop/common_footer.dart';
+import 'package:union_shop/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final AuthService authService;
+
+  const LoginPage({super.key, required this.authService});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -22,15 +26,23 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      // TODO: Implement actual login logic
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login functionality coming soon!'),
-          backgroundColor: Color(0xFF4d2963),
-        ),
+      final success = await widget.authService.loginWithEmail(
+        _emailController.text,
+        _passwordController.text,
       );
+
+      if (success && mounted) {
+        context.go('/account');
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid email or password'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -219,6 +231,68 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 24),
 
+                      // Social Login Buttons
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          final success =
+                              await widget.authService.signInWithGoogle();
+                          if (success && mounted) {
+                            context.go('/account');
+                          }
+                        },
+                        icon: const Icon(Icons.g_mobiledata, size: 28),
+                        label: const Text('Continue with Google'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black87,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            side: BorderSide(color: Colors.grey[300]!),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          final success =
+                              await widget.authService.signInWithFacebook();
+                          if (success && mounted) {
+                            context.go('/account');
+                          }
+                        },
+                        icon: const Icon(Icons.facebook),
+                        label: const Text('Continue with Facebook'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1877F2),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Divider
+                      Row(
+                        children: [
+                          Expanded(child: Divider(color: Colors.grey[300])),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'OR',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Expanded(child: Divider(color: Colors.grey[300])),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
                       // Sign Up Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +305,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, '/signup');
+                              context.go('/signup');
                             },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.zero,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:union_shop/main.dart';
 import 'package:union_shop/common_footer.dart';
 import 'package:union_shop/common_header.dart';
@@ -111,10 +112,7 @@ class CollectionsPage extends StatelessWidget {
       BuildContext context, String category, String imageUrl) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/category/$category',
-        );
+        context.go('/category/${Uri.encodeComponent(category)}');
       },
       child: Container(
         decoration: BoxDecoration(

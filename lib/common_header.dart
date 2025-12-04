@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CommonHeader extends StatefulWidget {
   const CommonHeader({super.key});
@@ -61,11 +62,8 @@ class _CommonHeaderState extends State<CommonHeader> {
                   onSubmitted: (value) {
                     if (value.isNotEmpty) {
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                        context,
-                        '/all_products',
-                        arguments: {'searchQuery': value},
-                      );
+                      context.go(
+                          '/all_products?searchQuery=${Uri.encodeComponent(value)}');
                     }
                   },
                 ),
@@ -87,11 +85,8 @@ class _CommonHeaderState extends State<CommonHeader> {
                       onPressed: () {
                         if (searchController.text.isNotEmpty) {
                           Navigator.of(context).pop();
-                          Navigator.pushNamed(
-                            context,
-                            '/all_products',
-                            arguments: {'searchQuery': searchController.text},
-                          );
+                          context.go(
+                              '/all_products?searchQuery=${Uri.encodeComponent(searchController.text)}');
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -169,7 +164,7 @@ class _CommonHeaderState extends State<CommonHeader> {
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/');
+                  context.go('/');
                 },
                 child: Image.network(
                   'https://shop.upsu.net/cdn/shop/files/upsu_300x300.png?v=1614735854',
@@ -221,7 +216,7 @@ class _CommonHeaderState extends State<CommonHeader> {
                         minHeight: 32,
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/login');
+                        context.go('/login');
                       },
                     ),
                     IconButton(
@@ -236,7 +231,7 @@ class _CommonHeaderState extends State<CommonHeader> {
                         minHeight: 32,
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/cart');
+                        context.go('/cart');
                       },
                     ),
                     IconButton(
@@ -267,16 +262,15 @@ class _CommonHeaderState extends State<CommonHeader> {
               children: [
                 _buildMenuItem('Home', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/');
+                  context.go('/');
                 }),
                 _buildMenuItem('Shop', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/all_products',
-                      arguments: {'searchQuery': ''});
+                  context.go('/all_products');
                 }),
                 _buildMenuItem('Collections', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/collections');
+                  context.go('/collections');
                 }),
                 _buildMenuItem('The Print Shack', () {
                   toggleMenu();
@@ -284,11 +278,11 @@ class _CommonHeaderState extends State<CommonHeader> {
                 }),
                 _buildMenuItem('SALE!', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/sales');
+                  context.go('/sales');
                 }),
                 _buildMenuItem('About', () {
                   toggleMenu();
-                  Navigator.pushNamed(context, '/about');
+                  context.go('/about');
                 }),
               ],
             ),

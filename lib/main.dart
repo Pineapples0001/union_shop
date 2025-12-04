@@ -1,18 +1,21 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:union_shop/product_page.dart';
-import 'package:union_shop/all_products_page.dart';
-import 'package:union_shop/cart_page.dart';
-import 'package:union_shop/about_page.dart';
-import 'package:union_shop/sales_page.dart';
-import 'package:union_shop/login_page.dart';
-import 'package:union_shop/signup_page.dart';
 import 'package:union_shop/common_footer.dart';
-import 'package:union_shop/collections_page.dart';
-import 'package:union_shop/category_page.dart';
+import 'package:union_shop/services/auth_service.dart';
+import 'package:union_shop/router/app_router.dart';
 
 void main() {
-  runApp(const UnionShopApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthService()),
+      ],
+      child: const UnionShopApp(),
+    ),
+  );
 }
 
 // Product Model Class
@@ -538,67 +541,16 @@ class UnionShopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final appRouter = AppRouter(authService);
+
+    return MaterialApp.router(
       title: 'Union Shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4d2963)),
       ),
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        if (settings.name == '/') {
-          return MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-            settings: settings,
-          );
-        } else if (settings.name == '/all_products') {
-          final args = settings.arguments as Map<String, dynamic>?;
-          return MaterialPageRoute(
-            builder: (context) => AllProductsPage(
-              searchQuery: args?['searchQuery'] ?? '',
-              initialCategory: args?['category'],
-            ),
-            settings: settings,
-          );
-        } else if (settings.name == '/collections') {
-          return MaterialPageRoute(
-            builder: (context) => const CollectionsPage(),
-            settings: settings,
-          );
-        } else if (settings.name == '/cart') {
-          return MaterialPageRoute(
-            builder: (context) => const CartPage(),
-            settings: settings,
-          );
-        } else if (settings.name == '/about') {
-          return MaterialPageRoute(
-            builder: (context) => const AboutPage(),
-            settings: settings,
-          );
-        } else if (settings.name == '/sales') {
-          return MaterialPageRoute(
-            builder: (context) => const SalesPage(),
-            settings: settings,
-          );
-        } else if (settings.name == '/login') {
-          return MaterialPageRoute(
-            builder: (context) => const LoginPage(),
-            settings: settings,
-          );
-        } else if (settings.name == '/signup') {
-          return MaterialPageRoute(
-            builder: (context) => const SignupPage(),
-            settings: settings,
-          );
-        } else if (settings.name?.startsWith('/category/') == true) {
-          final categoryName = settings.name!.substring('/category/'.length);
-          return MaterialPageRoute(
-            builder: (context) => CategoryPage(categoryName: categoryName),
-            settings: settings,
-          );
-        }
-        return null;
-      },
+      routerConfig: appRouter.router,
     );
   }
 }
@@ -658,11 +610,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void navigateToHome(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    context.go('/');
   }
 
   void navigateToProduct(BuildContext context) {
-    Navigator.pushNamed(context, '/product');
+    // Product navigation handled by product cards
   }
 
   void toggleMenu() {
@@ -742,11 +694,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   onSubmitted: (value) {
                     if (value.isNotEmpty) {
                       Navigator.of(context).pop();
-                      Navigator.pushNamed(
-                        context,
-                        '/all_products',
-                        arguments: {'searchQuery': value},
-                      );
+                      context.go(
+                          '/all_products?searchQuery=${Uri.encodeComponent(value)}');
                     }
                   },
                 ),
@@ -768,11 +717,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         if (searchController.text.isNotEmpty) {
                           Navigator.of(context).pop();
-                          Navigator.pushNamed(
-                            context,
-                            '/all_products',
-                            arguments: {'searchQuery': searchController.text},
-                          );
+                          context.go(
+                              '/all_products?searchQuery=${Uri.encodeComponent(searchController.text)}');
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -889,7 +835,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   minHeight: 32,
                                 ),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/login');
+                                  context.go('/login');
                                 },
                               ),
                               IconButton(
@@ -904,7 +850,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   minHeight: 32,
                                 ),
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/cart');
+                                  context.go('/cart');
                                 },
                               ),
                               IconButton(
@@ -939,16 +885,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     _buildMenuItem('Home', () {
                       toggleMenu();
-                      Navigator.pushNamed(context, '/');
+                      context.go('/');
                     }),
                     _buildMenuItem('Shop', () {
                       toggleMenu();
-                      Navigator.pushNamed(context, '/all_products',
-                          arguments: {'searchQuery': ''});
+                      context.go('/all_products');
                     }),
                     _buildMenuItem('Collections', () {
                       toggleMenu();
-                      Navigator.pushNamed(context, '/collections');
+                      context.go('/collections');
                     }),
                     _buildMenuItem('The Print Shack', () {
                       toggleMenu();
@@ -956,12 +901,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     _buildMenuItem('SALE!', () {
                       toggleMenu();
-                      Navigator.pushNamed(context, '/all_products',
-                          arguments: {'searchQuery': ''});
+                      context.go('/sales');
                     }),
                     _buildMenuItem('About', () {
                       toggleMenu();
-                      Navigator.pushNamed(context, '/about');
+                      context.go('/about');
                     }),
                   ],
                 ),
@@ -1175,6 +1119,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Using Navigator.push for ProductPage since it requires product parameter
         Navigator.push(
           context,
           MaterialPageRoute(
