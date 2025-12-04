@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:union_shop/product_page.dart';
+import 'package:union_shop/main.dart';
 
 void main() {
   group('Product Page Tests', () {
+    final testProduct = Product(
+      serial: 'TEST001',
+      name: 'Test Product',
+      category: 'Test Category',
+      description: 'Test description',
+      price: 10.0,
+      isSale: false,
+      imageUrl: 'https://via.placeholder.com/150',
+      isVisible: true,
+    );
+
     Widget createTestWidget() {
-      return const MaterialApp(home: ProductPage());
+      return MaterialApp(home: ProductPage(product: testProduct));
     }
 
     testWidgets('should display product page with basic elements', (

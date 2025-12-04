@@ -3,7 +3,9 @@ import 'package:union_shop/main.dart';
 import 'package:union_shop/product_page.dart';
 
 class AllProductsPage extends StatefulWidget {
-  const AllProductsPage({super.key});
+  final String? searchQuery;
+
+  const AllProductsPage({super.key, this.searchQuery});
 
   @override
   State<AllProductsPage> createState() => _AllProductsPageState();
@@ -12,18 +14,138 @@ class AllProductsPage extends StatefulWidget {
 class _AllProductsPageState extends State<AllProductsPage> {
   String selectedCategory = 'All';
   String selectedSort = 'Name (A-Z)';
+  String searchQuery = '';
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.searchQuery != null) {
+      searchQuery = widget.searchQuery!;
+    }
   }
 
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
   }
 
+  void showSearchDialog(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+    searchController.text = searchQuery;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Search Products',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: searchController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Enter product name, category, or description...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF4d2963),
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  onSubmitted: (value) {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      searchQuery = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'CANCEL',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        setState(() {
+                          searchQuery = searchController.text;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4d2963),
+                        foregroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: const Text(
+                        'SEARCH',
+                        style: TextStyle(
+                          fontSize: 14,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   List<Product> getFilteredAndSortedProducts() {
     // Get all visible products
     List<Product> products = productDatabase.where((p) => p.isVisible).toList();
+
+    // Filter by search query
+    if (searchQuery.isNotEmpty) {
+      products = products.where((p) {
+        final query = searchQuery.toLowerCase();
+        return p.name.toLowerCase().contains(query) ||
+            p.description.toLowerCase().contains(query) ||
+            p.category.toLowerCase().contains(query);
+      }).toList();
+    }
 
     // Filter by category
     if (selectedCategory != 'All') {
@@ -145,7 +267,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                                     minWidth: 32,
                                     minHeight: 32,
                                   ),
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: () => showSearchDialog(context),
                                 ),
                                 IconButton(
                                   icon: const Icon(
@@ -212,6 +334,45 @@ class _AllProductsPageState extends State<AllProductsPage> {
                       letterSpacing: 1,
                     ),
                   ),
+                  const SizedBox(height: 16),
+
+                  // Search query display
+                  if (searchQuery.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: const Color(0xFF4d2963)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.search,
+                              size: 16, color: Color(0xFF4d2963)),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Search: "$searchQuery"',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF4d2963),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                searchQuery = '';
+                              });
+                            },
+                            child: const Icon(Icons.close,
+                                size: 16, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 32),
 
                   // Filter and Sort Dropdowns

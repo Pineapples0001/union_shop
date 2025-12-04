@@ -1,17 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:union_shop/main.dart';
+import 'package:union_shop/cart_manager.dart';
+import 'package:union_shop/all_products_page.dart';
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   final Product product;
 
   const ProductPage({super.key, required this.product});
 
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
   void placeholderCallbackForButtons() {
     // This is the event handler for buttons that don't work yet
+  }
+
+  void showSearchDialog(BuildContext context) {
+    final TextEditingController searchController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Search Products',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: searchController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: 'Enter product name, category, or description...',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF4d2963),
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  onSubmitted: (value) {
+                    if (value.isNotEmpty) {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AllProductsPage(searchQuery: value),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'CANCEL',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (searchController.text.isNotEmpty) {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllProductsPage(
+                                searchQuery: searchController.text,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF4d2963),
+                        foregroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                      child: const Text(
+                        'SEARCH',
+                        style: TextStyle(
+                          fontSize: 14,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -81,7 +201,9 @@ class ProductPage extends StatelessWidget {
                                     minWidth: 32,
                                     minHeight: 32,
                                   ),
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: () {
+                                    showSearchDialog(context);
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(
@@ -107,7 +229,9 @@ class ProductPage extends StatelessWidget {
                                     minWidth: 32,
                                     minHeight: 32,
                                   ),
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/cart');
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(
@@ -158,7 +282,7 @@ class ProductPage extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.network(
-                                product.imageUrl,
+                                widget.product.imageUrl,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
@@ -195,7 +319,7 @@ class ProductPage extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: _ProductDetails(
-                            product: product,
+                            product: widget.product,
                             placeholderCallback: placeholderCallbackForButtons,
                           ),
                         ),
@@ -216,7 +340,7 @@ class ProductPage extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              product.imageUrl,
+                              widget.product.imageUrl,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
@@ -246,7 +370,7 @@ class ProductPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 24),
                         _ProductDetails(
-                          product: product,
+                          product: widget.product,
                           placeholderCallback: placeholderCallbackForButtons,
                         ),
                       ],
@@ -498,7 +622,83 @@ class _ProductDetailsState extends State<_ProductDetails> {
           width: double.infinity,
           height: 56,
           child: ElevatedButton(
-            onPressed: widget.placeholderCallback,
+            onPressed: () {
+              final cartManager = CartManager();
+              cartManager.addToCart(
+                widget.product,
+                selectedSize,
+                quantity,
+              );
+
+              // Show confirmation dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.zero,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(32),
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.check_circle_outline,
+                            color: Color(0xFF4d2963),
+                            size: 64,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Added to Cart',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '${widget.product.name} has been added to your cart.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF4d2963),
+                                foregroundColor: Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                              child: const Text(
+                                'CLOSE',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF4d2963),
               foregroundColor: Colors.white,
