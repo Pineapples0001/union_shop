@@ -6,6 +6,7 @@ import 'package:union_shop/product_page.dart';
 import 'package:union_shop/common_footer.dart';
 import 'package:union_shop/services/auth_service.dart';
 import 'package:union_shop/services/order_service.dart';
+import 'package:union_shop/cart_manager.dart';
 import 'package:union_shop/router/app_router.dart';
 
 void main() {
@@ -851,19 +852,55 @@ class _HomeScreenState extends State<HomeScreen> {
                                   context.go('/login');
                                 },
                               ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.shopping_bag_outlined,
-                                  size: 18,
-                                  color: Colors.grey,
-                                ),
-                                padding: const EdgeInsets.all(8),
-                                constraints: const BoxConstraints(
-                                  minWidth: 32,
-                                  minHeight: 32,
-                                ),
-                                onPressed: () {
-                                  context.go('/cart');
+                              ValueListenableBuilder<int>(
+                                valueListenable:
+                                    CartManager().itemCountNotifier,
+                                builder: (context, itemCount, child) {
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.shopping_bag_outlined,
+                                          size: 18,
+                                          color: Colors.grey,
+                                        ),
+                                        padding: const EdgeInsets.all(8),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 32,
+                                          minHeight: 32,
+                                        ),
+                                        onPressed: () {
+                                          context.go('/cart');
+                                        },
+                                      ),
+                                      if (itemCount > 0)
+                                        Positioned(
+                                          right: 2,
+                                          top: 2,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 16,
+                                              minHeight: 16,
+                                            ),
+                                            child: Text(
+                                              '$itemCount',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
                                 },
                               ),
                               IconButton(

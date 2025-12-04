@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:union_shop/main.dart';
 
 // Cart Item Model
@@ -20,6 +21,7 @@ class CartManager {
   CartManager._internal();
 
   final List<CartItem> _cartItems = [];
+  final ValueNotifier<int> itemCountNotifier = ValueNotifier<int>(0);
 
   List<CartItem> get cartItems => List.unmodifiable(_cartItems);
 
@@ -45,11 +47,13 @@ class CartManager {
         quantity: quantity,
       ));
     }
+    itemCountNotifier.value = _cartItems.length;
   }
 
   void removeFromCart(int index) {
     if (index >= 0 && index < _cartItems.length) {
       _cartItems.removeAt(index);
+      itemCountNotifier.value = _cartItems.length;
     }
   }
 
@@ -66,6 +70,7 @@ class CartManager {
 
   void clearCart() {
     _cartItems.clear();
+    itemCountNotifier.value = 0;
   }
 
   int get itemCount => _cartItems.length;

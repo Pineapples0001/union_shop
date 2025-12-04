@@ -182,7 +182,7 @@ class _CartPageState extends State<CartPage> {
                             const SizedBox(height: 24),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/all_products');
+                                context.go('/all_products');
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF4d2963),
@@ -445,7 +445,7 @@ class _CartPageState extends State<CartPage> {
                               const SizedBox(height: 12),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/all_products');
+                                  context.go('/all_products');
                                 },
                                 child: const Text(
                                   'Continue Shopping',
