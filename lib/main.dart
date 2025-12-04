@@ -5,6 +5,100 @@ void main() {
   runApp(const UnionShopApp());
 }
 
+// Product Model Class
+class Product {
+  final String serial;
+  final String name;
+  final String category;
+  final String description;
+  final double price;
+  final bool isSale;
+  final double? salePrice;
+  final String imageUrl;
+  final bool isVisible;
+
+  const Product({
+    required this.serial,
+    required this.name,
+    required this.category,
+    required this.description,
+    required this.price,
+    required this.isSale,
+    this.salePrice,
+    required this.imageUrl,
+    this.isVisible = true,
+  });
+}
+
+// Sample Product Database
+final List<Product> productDatabase = [
+  Product(
+    serial: 'PROD001',
+    name: 'Portsmouth City Magnet',
+    category: 'Souvenirs',
+    description:
+        'A beautiful commemorative magnet featuring Portsmouth City landmarks. Perfect souvenir for students and visitors.',
+    price: 15.00,
+    isSale: true,
+    salePrice: 12.00,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: true,
+  ),
+  Product(
+    serial: 'PROD002',
+    name: 'University Hoodie',
+    category: 'Clothing',
+    description:
+        'Comfortable and stylish university branded hoodie. Made from high-quality cotton blend material.',
+    price: 35.00,
+    isSale: true,
+    salePrice: 28.00,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: true,
+  ),
+  Product(
+    serial: 'PROD003',
+    name: 'Campus Mug',
+    category: 'Accessories',
+    description:
+        'Ceramic mug with university logo. Dishwasher safe and perfect for your morning coffee or tea.',
+    price: 10.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: true,
+  ),
+  Product(
+    serial: 'PROD004',
+    name: 'Student Notebook Set',
+    category: 'Stationery',
+    description:
+        'Set of 3 ruled notebooks ideal for lectures and study sessions. Includes perforated pages for easy removal.',
+    price: 8.00,
+    isSale: false,
+    salePrice: null,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: true,
+  ),
+  Product(
+    serial: 'PROD005',
+    name: 'University Backpack',
+    category: 'Accessories',
+    description:
+        'Durable backpack with laptop compartment and multiple pockets. Features the university logo and water-resistant material.',
+    price: 45.00,
+    isSale: true,
+    salePrice: 36.00,
+    imageUrl:
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+    isVisible: false,
+  ),
+];
+
 class UnionShopApp extends StatelessWidget {
   const UnionShopApp({super.key});
 
@@ -56,12 +150,13 @@ class HomeScreen extends StatelessWidget {
                   // Top banner
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     color: const Color(0xFF4d2963),
                     child: const Text(
-                      'PLACEHOLDER HEADER TEXT',
+                      'BIG SALE! OUR ESSENTIAL RANGE HAS DROPPED IN PRICE! OVER 20% OFF! COME GRAB YOURS WHILE STOCK LASTS!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ),
                   // Main header
@@ -256,32 +351,10 @@ class HomeScreen extends StatelessWidget {
                           MediaQuery.of(context).size.width > 600 ? 2 : 1,
                       crossAxisSpacing: 24,
                       mainAxisSpacing: 48,
-                      children: const [
-                        ProductCard(
-                          title: 'Placeholder Product 1',
-                          price: '£10.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 2',
-                          price: '£15.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 3',
-                          price: '£20.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 4',
-                          price: '£25.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                      ],
+                      children: productDatabase
+                          .where((product) => product.isVisible)
+                          .map((product) => ProductCard(product: product))
+                          .toList(),
                     ),
                   ],
                 ),
@@ -310,15 +383,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 class ProductCard extends StatelessWidget {
-  final String title;
-  final String price;
-  final String imageUrl;
+  final Product product;
 
   const ProductCard({
     super.key,
-    required this.title,
-    required this.price,
-    required this.imageUrl,
+    required this.product,
   });
 
   @override
@@ -332,7 +401,7 @@ class ProductCard extends StatelessWidget {
         children: [
           Expanded(
             child: Image.network(
-              imageUrl,
+              product.imageUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -347,17 +416,66 @@ class ProductCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 8),
+              Text(
+                'Serial: ${product.serial}',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const SizedBox(height: 4),
               Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.black),
+                product.name,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
                 maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
-                price,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
+                product.category,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
               ),
+              const SizedBox(height: 6),
+              if (product.isSale && product.salePrice != null)
+                Row(
+                  children: [
+                    Text(
+                      '£${product.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '£${product.salePrice!.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Text(
+                  '£${product.price.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
             ],
           ),
         ],
