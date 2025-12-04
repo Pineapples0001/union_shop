@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:union_shop/product_page.dart';
 import 'package:union_shop/all_products_page.dart';
@@ -385,8 +386,58 @@ class UnionShopApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentCategoryIndex = 0;
+  late List<Product> _categoryProducts;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Get one product from each category
+    final categories = productDatabase
+        .where((p) => p.isVisible)
+        .map((p) => p.category)
+        .toSet()
+        .toList();
+
+    _categoryProducts = categories
+        .map((category) => productDatabase.firstWhere(
+              (p) => p.category == category && p.isVisible,
+            ))
+        .toList();
+
+    // Start slideshow timer
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      setState(() {
+        _currentCategoryIndex =
+            (_currentCategoryIndex + 1) % _categoryProducts.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      setState(() {
+        _currentCategoryIndex =
+            (_currentCategoryIndex + 1) % _categoryProducts.length;
+      });
+    });
+  }
 
   void navigateToHome(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -528,68 +579,146 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   // Background image
                   Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            'https://shop.upsu.net/cdn/shop/files/PortsmouthCityPostcard2_1024x1024@2x.jpg?v=1752232561',
+                    child: _categoryProducts.isEmpty
+                        ? Container(color: Colors.grey)
+                        : AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 500),
+                            child: Container(
+                              key: ValueKey<int>(_currentCategoryIndex),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    _categoryProducts[_currentCategoryIndex]
+                                        .imageUrl,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ),
                           ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    ),
                   ),
                   // Content overlay
                   Positioned(
                     left: 24,
                     right: 24,
                     top: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Placeholder Hero Title',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.2,
+                    child: _categoryProducts.isEmpty
+                        ? const SizedBox.shrink()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Left Arrow
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _currentCategoryIndex =
+                                        (_currentCategoryIndex -
+                                                1 +
+                                                _categoryProducts.length) %
+                                            _categoryProducts.length;
+                                  });
+                                  _resetTimer();
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              // Content
+                              Expanded(
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: Column(
+                                    key: ValueKey<int>(_currentCategoryIndex),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        _categoryProducts[_currentCategoryIndex]
+                                            .name,
+                                        style: const TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          height: 1.2,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        _categoryProducts[_currentCategoryIndex]
+                                            .category
+                                            .toUpperCase(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white70,
+                                          letterSpacing: 2,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        _categoryProducts[_currentCategoryIndex]
+                                            .description,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          height: 1.5,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 32),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/all_products');
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              const Color(0xFF4d2963),
+                                          foregroundColor: Colors.white,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.zero,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'BROWSE PRODUCTS',
+                                          style: TextStyle(
+                                              fontSize: 14, letterSpacing: 1),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              // Right Arrow
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _currentCategoryIndex =
+                                        (_currentCategoryIndex + 1) %
+                                            _categoryProducts.length;
+                                  });
+                                  _resetTimer();
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "This is placeholder text for the hero section.",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            height: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/all_products');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4d2963),
-                            foregroundColor: Colors.white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
-                          child: const Text(
-                            'BROWSE PRODUCTS',
-                            style: TextStyle(fontSize: 14, letterSpacing: 1),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
@@ -635,12 +764,17 @@ class HomeScreen extends StatelessWidget {
               color: const Color(0xFF2c2c2c),
               padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
               child: Column(
+                crossAxisAlignment: MediaQuery.of(context).size.width > 600
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
                 children: [
                   // Footer content
                   Wrap(
                     spacing: 40,
                     runSpacing: 24,
-                    alignment: WrapAlignment.center,
+                    alignment: MediaQuery.of(context).size.width > 600
+                        ? WrapAlignment.center
+                        : WrapAlignment.start,
                     children: [
                       // About section
                       SizedBox(
@@ -816,13 +950,17 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          'Get updates on new products and special offers',
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 12,
+                        Builder(
+                          builder: (context) => Text(
+                            'Get updates on new products and special offers',
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 12,
+                            ),
+                            textAlign: MediaQuery.of(context).size.width > 600
+                                ? TextAlign.center
+                                : TextAlign.left,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -881,13 +1019,17 @@ class HomeScreen extends StatelessWidget {
                   Divider(color: Colors.grey[700], thickness: 1),
                   const SizedBox(height: 16),
                   // Copyright
-                  Text(
-                    '© 2025 Union Shop. All rights reserved.',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
+                  Builder(
+                    builder: (context) => Text(
+                      '© 2025 Union Shop. All rights reserved.',
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                        fontSize: 12,
+                      ),
+                      textAlign: MediaQuery.of(context).size.width > 600
+                          ? TextAlign.center
+                          : TextAlign.left,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
