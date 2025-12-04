@@ -309,7 +309,7 @@ class _CartPageState extends State<CartPage> {
                                         vertical: 16),
                                   ),
                                   child: const Text(
-                                    'PROCEED TO CHECKOUT',
+                                    'Order',
                                     style: TextStyle(
                                       fontSize: 16,
                                       letterSpacing: 1,

@@ -18,49 +18,8 @@ class AccountDashboard extends StatefulWidget {
 class _AccountDashboardState extends State<AccountDashboard> {
   int _selectedTab = 0;
 
-  // Mock order data
-  final List<OrderModel> _orders = [
-    OrderModel(
-      id: 'ORD001',
-      userId: 'user123',
-      items: [
-        OrderItem(
-          productId: 'PROD001',
-          productName: 'Portsmouth City Magnet',
-          quantity: 2,
-          price: 12.00,
-          imageUrl:
-              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-        ),
-      ],
-      totalAmount: 24.00,
-      status: 'delivered',
-      orderDate: DateTime.now().subtract(const Duration(days: 5)),
-      trackingNumber: 'TRK123456789',
-      shippingAddress: '123 Main St, Portsmouth, PO1 2AB',
-      paymentMethod: 'Credit Card',
-    ),
-    OrderModel(
-      id: 'ORD002',
-      userId: 'user123',
-      items: [
-        OrderItem(
-          productId: 'PROD002',
-          productName: 'Classic Hoodie',
-          quantity: 1,
-          price: 18.00,
-          imageUrl:
-              'https://shop.upsu.net/cdn/shop/files/PurpleHoodieFinal.jpg?v=1742201957',
-        ),
-      ],
-      totalAmount: 18.00,
-      status: 'shipped',
-      orderDate: DateTime.now().subtract(const Duration(days: 2)),
-      trackingNumber: 'TRK987654321',
-      shippingAddress: '123 Main St, Portsmouth, PO1 2AB',
-      paymentMethod: 'PayPal',
-    ),
-  ];
+  // User's actual orders - empty until they make purchases
+  final List<OrderModel> _orders = [];
 
   @override
   Widget build(BuildContext context) {
@@ -378,7 +337,43 @@ class _AccountDashboardState extends State<AccountDashboard> {
           ),
         ),
         const SizedBox(height: 16),
-        ..._orders.take(3).map((order) => _buildOrderCard(order)).toList(),
+        if (_orders.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(40),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[300]!),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.shopping_bag_outlined,
+                  size: 64,
+                  color: Colors.grey[400],
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No orders yet',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Start shopping to see your orders here!',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          ..._orders.take(3).map((order) => _buildOrderCard(order)).toList(),
       ],
     );
   }
@@ -434,7 +429,71 @@ class _AccountDashboardState extends State<AccountDashboard> {
           ),
         ),
         const SizedBox(height: 24),
-        ..._orders.map((order) => _buildOrderCard(order)).toList(),
+        if (_orders.isEmpty)
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(60),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 80,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'No orders yet',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'You haven\'t placed any orders yet.\nStart shopping to see your order history here!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.go('/');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4d2963),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    child: const Text(
+                      'START SHOPPING',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          ..._orders.map((order) => _buildOrderCard(order)).toList(),
       ],
     );
   }
