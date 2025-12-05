@@ -124,7 +124,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/BlackTshirtFinal_1024x1024@2x.png?v=1669713197',
     isVisible: true,
   ),
   Product(
@@ -137,7 +137,7 @@ final List<Product> productDatabase = [
     isSale: true,
     salePrice: 25.60,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/BlackSweatshirtFinal_1024x1024@2x.png?v=1741965433',
     isVisible: true,
   ),
   Product(
@@ -150,7 +150,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/HeavyWeightShortspng_1024x1024@2x.png?v=1683815389',
     isVisible: true,
   ),
   Product(
@@ -163,12 +163,12 @@ final List<Product> productDatabase = [
     isSale: true,
     salePrice: 12.00,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/Cap-Purple_1024x1024@2x.jpg?v=1742201981',
     isVisible: true,
   ),
   Product(
     serial: 'PROD010',
-    name: 'University Scarf',
+    name: 'University Beanie',
     category: 'Clothing',
     description:
         'Warm knitted scarf in university colors. Perfect for showing your school spirit in winter.',
@@ -176,7 +176,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/Beanie-White_1024x1024@2x.jpg?v=1742201998',
     isVisible: true,
   ),
   // Accessories - 5 items
@@ -190,7 +190,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityWaterBottle5_1024x1024@2x.jpg?v=1755251995',
     isVisible: true,
   ),
   Product(
@@ -203,7 +203,7 @@ final List<Product> productDatabase = [
     isSale: true,
     salePrice: 9.60,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/cottonshopper_1024x1024@2x.jpg?v=1657540427',
     isVisible: true,
   ),
   Product(
@@ -216,7 +216,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/Fidget_Keyring_1024x1024@2x.png?v=1719226889',
     isVisible: true,
   ),
   Product(
@@ -229,7 +229,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/IMG_0645_1024x1024@2x.jpg?v=1557218961',
     isVisible: true,
   ),
   Product(
@@ -242,7 +242,7 @@ final List<Product> productDatabase = [
     isSale: true,
     salePrice: 6.40,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/lapelpins_1024x1024@2x.webp?v=1704879504',
     isVisible: true,
   ),
   // Souvenirs - 5 items
@@ -322,7 +322,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/IMG_3454_b13bdf10-3a11-42d0-90ea-55cdd9314f48_1024x1024@2x.jpg?v=1648635743',
     isVisible: true,
   ),
   Product(
@@ -388,7 +388,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/Bear_1_-_right_size_1024x1024@2x.jpg?v=1750064318',
     isVisible: false,
   ),
   Product(
@@ -468,7 +468,7 @@ final List<Product> productDatabase = [
     isSale: false,
     salePrice: null,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/products/RainbowLanyard_540x.jpg?v=1657031493',
     isVisible: false,
   ),
   Product(
@@ -481,7 +481,7 @@ final List<Product> productDatabase = [
     isSale: true,
     salePrice: 9.60,
     imageUrl:
-        'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
+        'https://shop.upsu.net/cdn/shop/files/Pin_1024x1024@2x.jpg?v=1749118523',
     isVisible: false,
   ),
   Product(
