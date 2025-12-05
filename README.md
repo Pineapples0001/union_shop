@@ -48,11 +48,10 @@ This Flutter application is a comprehensive recreation of the [University of Por
 ### ✅ Advanced Features (25%)
 
 | Feature                   | Status      | Description                                                                                                               |
-| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
+| ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------- | --- |
 | **Authentication System** | ✅ Complete | Full user authentication with email/password, Google Sign-In, Facebook Login, persistent sessions, and account dashboard  |
 | **Cart Management**       | ✅ Complete | Singleton cart manager with quantity controls, item removal, total calculations, sale price support, and cart persistence |
-| **Search System**         | ✅ Complete | Global search functionality with query parameters, searching across product names, categories, and descriptions           |
-| **Account Dashboard**     | ✅ Complete | User profile management, order history, order tracking, and logout functionality with protected routes                    |
+| **Search System**         | ✅ Complete | Global search functionality with query parameters, searching across product names, categories, and descriptions           |     |
 
 ## 🏗️ Project Structure
 
